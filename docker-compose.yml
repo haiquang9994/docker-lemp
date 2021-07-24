@@ -1,0 +1,64 @@
+services:
+  web:
+    container_name: nginx
+    image: nginx
+    depends_on:
+      - fpm74_a
+      - fpm74_b
+      - fpm74_c
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/php_farm/fpm74:/etc/nginx/fpm74
+      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/log:/var/log/nginx
+      - ${WWW}:/www
+    links:
+      - fpm74_a
+      - fpm74_b
+      - fpm74_c
+  fpm74_a:
+    container_name: fpm74_a
+    build: ./php
+    volumes:
+      - ${WWW}:/www
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+    links:
+      - redis
+      - mysql
+  fpm74_b:
+    container_name: fpm74_b
+    build: ./php
+    volumes:
+      - ${WWW}:/www
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+    links:
+      - redis
+      - mysql
+  fpm74_c:
+    container_name: fpm74_c
+    build: ./php
+    volumes:
+      - ${WWW}:/www
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+    links:
+      - redis
+      - mysql
+  redis:
+    container_name: redis
+    image: redis
+    volumes:
+      - ./redis/data:/data
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: '1234'
+    ports:
+      - 3306:3306
+    volumes:
+      - ${WWW}/sql:/sql
+      - ./mysql/mysql:/var/lib/mysql
+      - ./mysql/.my.cnf:/root/.my.cnf

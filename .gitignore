@@ -1,0 +1,10 @@
+mysql/mysql
+nginx/conf.d/*
+nginx/log/*
+redis/data
+
+
+!nginx/conf.d/_.conf
+!nginx/conf.d/default.conf
+!nginx/conf.d/php.conf
+!.gitkeep
