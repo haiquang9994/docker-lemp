@@ -1,3 +1,0 @@
-#!/bin/sh
-db_name="$1"
-docker exec mysql /usr/bin/mysqldump $db_name

@@ -1,4 +1,0 @@
-#!/bin/sh
-sql_path="$1"
-db_name="$2"
-cat $sql_path | docker exec -i mysql /usr/bin/mysql $db_name

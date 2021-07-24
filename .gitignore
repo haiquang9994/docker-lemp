@@ -2,6 +2,7 @@ mysql/mysql
 nginx/conf.d/*
 nginx/log/*
 redis/data
+.env
 
 
 !nginx/conf.d/_.conf

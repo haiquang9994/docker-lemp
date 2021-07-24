@@ -1,11 +1,8 @@
 services:
-  web:
-    container_name: nginx
-    image: nginx
+  nginx:
+    build: ./build/nginx
     depends_on:
-      - fpm74_a
-      - fpm74_b
-      - fpm74_c
+      - php74
     ports:
       - 80:80
     volumes:
@@ -14,45 +11,20 @@ services:
       - ./nginx/html:/usr/share/nginx/html
       - ./nginx/log:/var/log/nginx
       - ${WWW}:/www
-    links:
-      - fpm74_a
-      - fpm74_b
-      - fpm74_c
-  fpm74_a:
-    container_name: fpm74_a
-    build: ./php
+  php74:
+    build: ./build/php/php74
     volumes:
       - ${WWW}:/www
-      - ./php/php.ini:/usr/local/etc/php/php.ini
-    links:
-      - redis
-      - mysql
-  fpm74_b:
-    container_name: fpm74_b
-    build: ./php
-    volumes:
-      - ${WWW}:/www
-      - ./php/php.ini:/usr/local/etc/php/php.ini
-    links:
-      - redis
-      - mysql
-  fpm74_c:
-    container_name: fpm74_c
-    build: ./php
-    volumes:
-      - ${WWW}:/www
-      - ./php/php.ini:/usr/local/etc/php/php.ini
-    links:
-      - redis
-      - mysql
+      - ./php/php74/php.ini:/usr/local/etc/php/php.ini
+    deploy:
+      mode: replicated
+      replicas: 3
   redis:
-    container_name: redis
-    image: redis
+    build: ./build/redis
     volumes:
       - ./redis/data:/data
   mysql:
-    container_name: mysql
-    image: mysql:5.7
+    build: ./build/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: '1234'
