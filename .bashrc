@@ -1,3 +1,14 @@
+dexec() { 
+    c="$1" 
+    d="$2" 
+    f=$(docker exec -i $c sh -c "test -d $d && echo '1'") 
+    if [ "$f" = "1" ]; then 
+        docker exec -it -w /$d $c bash 
+    else 
+        docker exec -it $c bash 
+    fi 
+}
+
 dphp() {
     pwd=$(pwd)
     current_path="${pwd/\/home\/light\/Dev/''}"
